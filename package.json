@@ -1,0 +1,39 @@
+{
+  "name": "sxr-management-suite-2o",
+  "version": "1.0.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-native": "latest",
+    "react-native-web": "latest",
+
+    "expo-asset": "latest",
+    "expo-file-system": "latest",
+    "expo-print": "latest",
+    "expo-secure-store": "latest",
+    "expo-status-bar": "latest",
+
+    "@react-native-async-storage/async-storage": "latest",
+
+    "@react-navigation/native": "latest",
+    "@react-navigation/bottom-tabs": "latest",
+    "@react-navigation/native-stack": "latest",
+    "react-native-safe-area-context": "latest",
+    "react-native-screens": "latest",
+
+    "i18next": "latest",
+    "react-i18next": "latest",
+
+    "react-native-svg": "latest",
+    "react-native-webview": "latest"
+  }
+}
