@@ -6,14 +6,13 @@ import { AppNavigator } from './navigation/AppNavigator';
 import './i18n';
 
 /**
- * Root component for the app.
+ * App entrypoint exported from /src.
  *
- * IMPORTANT: You said you'll manage App.js manually.
- * Typical App.js usage:
- *   import AppRoot from './src/AppRoot';
- *   export default AppRoot;
+ * Your root App.js (outside /src) can do:
+ *   import App from './src';
+ *   export default App;
  */
-export default function AppRoot() {
+export default function App() {
   return (
     <AppStoreProvider>
       <StatusBar style="auto" />
