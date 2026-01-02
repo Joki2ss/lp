@@ -34,6 +34,7 @@
     "react-i18next": "latest",
 
     "react-native-svg": "latest",
-    "react-native-webview": "latest"
+    "react-native-webview": "latest",
+    "typescript": "^5.6.3"
   }
 }
