@@ -1,15 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 
 import { ScreenContainer } from '../components/ScreenContainer';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { theme } from '../styles/theme';
 import { PRO_PRICE_EUR } from '../utils/constants';
 import { useAppStore } from '../store/useAppStore';
+import { useT } from '../i18n/t';
 
 export function AdminPaywallScreen() {
-  const { t } = useTranslation();
+  const { t } = useT();
   const { state, setPro } = useAppStore();
 
   return (

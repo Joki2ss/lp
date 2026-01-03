@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 
 import { ScreenContainer } from '../components/ScreenContainer';
@@ -9,9 +8,10 @@ import { listChats } from '../services/messageService';
 import { useAppStore } from '../store/useAppStore';
 import { ChatListItem } from '../components/ChatListItem';
 import { ROUTES } from '../navigation/routes';
+import { useT } from '../i18n/t';
 
 export function MessagesScreen() {
-  const { t } = useTranslation();
+  const { t } = useT();
   const nav = useNavigation();
   const { state } = useAppStore();
   const [chats, setChats] = useState([]);

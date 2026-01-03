@@ -1,15 +1,14 @@
 import React, { useMemo } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 
 import { LANGUAGES } from '../i18n/languages';
 import { theme } from '../styles/theme';
 import { FlagIcon } from './FlagIcon';
 import { useAppStore } from '../store/useAppStore';
-import i18n from '../i18n';
+import { useT } from '../i18n/t';
 
 export function LanguageSelector() {
-  const { t } = useTranslation();
+  const { t } = useT();
   const { state, setLanguage } = useAppStore();
 
   const current = useMemo(
@@ -19,7 +18,6 @@ export function LanguageSelector() {
 
   const onPick = async (code) => {
     try {
-      await i18n.changeLanguage(code);
       setLanguage(code);
       Alert.alert(t('language'), t('rtlNote'));
     } catch {

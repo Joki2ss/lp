@@ -3,7 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { AppStoreProvider } from './store/AppStoreProvider';
 import { AppNavigator } from './navigation/AppNavigator';
-import './i18n';
+import './i18n/setup';
 
 /**
  * App entrypoint exported from /src.

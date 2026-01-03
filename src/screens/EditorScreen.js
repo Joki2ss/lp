@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 
 import { ScreenContainer } from '../components/ScreenContainer';
 import { TextField } from '../components/TextField';
@@ -10,9 +9,10 @@ import { deleteDraft, listDrafts, upsertDraft, upsertRichDraft } from '../servic
 import { exportDraftToPdf, exportDraftToTxt } from '../services/exportService';
 import { useAppStore } from '../store/useAppStore';
 import { RichTextEditor } from '../components/RichTextEditor';
+import { useT } from '../i18n/t';
 
 export function EditorScreen() {
-  const { t } = useTranslation();
+  const { t } = useT();
   const { state } = useAppStore();
   const isLocked = state.session.role === 'admin' && !state.session.isPro;
 

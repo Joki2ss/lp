@@ -1,15 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 
 import { ScreenContainer } from '../components/ScreenContainer';
 import { theme } from '../styles/theme';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { useAppStore } from '../store/useAppStore';
 import { APP_NAME, ROLES } from '../utils/constants';
+import { useT } from '../i18n/t';
 
 export function HomeScreen() {
-  const { t } = useTranslation();
+  const { t } = useT();
   const { state, setRole } = useAppStore();
 
   return (
