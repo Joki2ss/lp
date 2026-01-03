@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ScreenContainer } from '../components/ScreenContainer';
@@ -8,7 +8,7 @@ import { useT } from '../i18n/t';
 import { listNotifications } from '../services/notificationService';
 import { ROUTES } from '../navigation/routes';
 import { LineChart } from '../components/charts/LineChart';
-import { getMetricSeries, getSeriesConfig, METRICS, saveSeriesConfig } from '../services/metricsService';
+import { getMetricSeries, getSeriesConfig, METRICS, saveSeriesConfig } from '../services/metricsService.js';
 
 export function DashboardScreen() {
   const { t } = useT();
@@ -26,12 +26,12 @@ export function DashboardScreen() {
   const [color, setColor] = useState('#2D6CDF');
   const [metric, setMetric] = useState(METRICS.REQUESTS);
 
-  const refresh = async () => {
+  const refresh = useCallback(async () => {
     const items = await listNotifications({ userId: state.session.userId });
     setLatest(items.slice(0, 2));
-  };
+  }, [state.session.userId]);
 
-  const syncChart = async () => {
+  const syncChart = useCallback(async () => {
     const cfg = await getSeriesConfig({ userId: state.session.userId });
     setSeriesCfg(cfg);
     const datasets = await Promise.all(
@@ -45,19 +45,19 @@ export function DashboardScreen() {
         }))
     );
     setSeriesData(datasets);
-  };
+  }, [state.session.userId]);
 
   useEffect(() => {
     const unsub = nav.addListener('focus', refresh);
     refresh();
     return unsub;
-  }, [nav, state.session.userId]);
+  }, [nav, refresh]);
 
   useEffect(() => {
     const unsub = nav.addListener('focus', syncChart);
     syncChart();
     return unsub;
-  }, [nav, state.session.userId]);
+  }, [nav, syncChart]);
 
   const hasLatest = useMemo(() => latest.length > 0, [latest.length]);
 

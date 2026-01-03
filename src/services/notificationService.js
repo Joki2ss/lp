@@ -1,7 +1,7 @@
 import { createId } from '../utils/id';
 import { nowIso } from '../utils/date';
 import { getItem, setItem } from './storage';
-import { bumpMetric, METRICS } from './metricsService';
+import { bumpMetric, METRICS } from './metricsService.js';
 
 function keyFor(userId) {
   return `notifications:${userId}`;

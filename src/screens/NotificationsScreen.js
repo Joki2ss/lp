@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -17,16 +17,16 @@ export function NotificationsScreen() {
   const [items, setItems] = useState([]);
   const [openId, setOpenId] = useState(null);
 
-  const refresh = async () => {
+  const refresh = useCallback(async () => {
     const data = await listNotifications({ userId: state.session.userId });
     setItems(data);
-  };
+  }, [state.session.userId]);
 
   useEffect(() => {
     const unsub = nav.addListener('focus', refresh);
     refresh();
     return unsub;
-  }, [nav, state.session.userId]);
+  }, [nav, refresh]);
 
   const unreadCount = useMemo(() => items.filter((n) => !n.read).length, [items]);
 
