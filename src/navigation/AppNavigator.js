@@ -17,6 +17,16 @@ import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { AdminPaywallScreen } from '../screens/AdminPaywallScreen';
+import { theme } from '../styles/theme';
+import {
+  BellIcon,
+  DashboardIcon,
+  EditorIcon,
+  HomeIcon,
+  MessagesIcon,
+  SettingsIcon,
+  UserIcon,
+} from '../components/icons/TabIcon';
 
 const Tabs = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -36,22 +46,67 @@ function MainTabs() {
         tabBarHideOnKeyboard: true,
         tabBarLabelPosition: 'below-icon',
         tabBarStyle: Platform.select({ web: { height: 56 } }),
+        tabBarActiveTintColor: theme.colors.brand,
+        tabBarInactiveTintColor: theme.colors.muted,
+        tabBarIconStyle: { marginTop: 3 },
       }}
     >
-      <Tabs.Screen name={ROUTES.HOME} component={HomeScreen} />
+      <Tabs.Screen
+        name={ROUTES.HOME}
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color }) => <HomeIcon color={color} />,
+        }}
+      />
 
       {showDashboardTab ? (
-        <Tabs.Screen name={ROUTES.DASHBOARD} component={DashboardScreen} />
+        <Tabs.Screen
+          name={ROUTES.DASHBOARD}
+          component={DashboardScreen}
+          options={{
+            tabBarIcon: ({ color }) => <DashboardIcon color={color} />,
+          }}
+        />
       ) : null}
 
       {showEditorTab ? (
-        <Tabs.Screen name={ROUTES.EDITOR} component={EditorScreen} />
+        <Tabs.Screen
+          name={ROUTES.EDITOR}
+          component={EditorScreen}
+          options={{
+            tabBarIcon: ({ color }) => <EditorIcon color={color} />,
+          }}
+        />
       ) : null}
 
-      <Tabs.Screen name={ROUTES.MESSAGES} component={MessagesScreen} />
-      <Tabs.Screen name={ROUTES.NOTIFICATIONS} component={NotificationsScreen} />
-      <Tabs.Screen name={ROUTES.PROFILE} component={ProfileScreen} />
-      <Tabs.Screen name={ROUTES.SETTINGS} component={SettingsScreen} />
+      <Tabs.Screen
+        name={ROUTES.MESSAGES}
+        component={MessagesScreen}
+        options={{
+          tabBarIcon: ({ color }) => <MessagesIcon color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name={ROUTES.NOTIFICATIONS}
+        component={NotificationsScreen}
+        options={{
+          tabBarIcon: ({ color }) => <BellIcon color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name={ROUTES.PROFILE}
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ color }) => <UserIcon color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name={ROUTES.SETTINGS}
+        component={SettingsScreen}
+        options={{
+          tabBarIcon: ({ color }) => <SettingsIcon color={color} />,
+        }}
+      />
     </Tabs.Navigator>
   );
 }

@@ -6,7 +6,9 @@ export const initialState = {
     role: ROLES.ADMIN,
     isPro: false,
     userId: 'admin',
+    displayName: 'Admin',
     email: 'admin@example.com',
+    mobile: '',
     language: 'en',
   },
   ui: {

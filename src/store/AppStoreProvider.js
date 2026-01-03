@@ -53,6 +53,10 @@ export function AppStoreProvider({ children }) {
     dispatch({ type: ACTIONS.SET_EMAIL, payload: { email } });
   }, []);
 
+  const setProfile = useCallback(({ displayName, email, mobile }) => {
+    dispatch({ type: ACTIONS.SET_PROFILE, payload: { displayName, email, mobile } });
+  }, []);
+
   const setLanguage = useCallback((language) => {
     dispatch({ type: ACTIONS.SET_LANGUAGE, payload: { language } });
   }, []);
@@ -62,8 +66,8 @@ export function AppStoreProvider({ children }) {
   }, []);
 
   const api = useMemo(
-    () => ({ state, dispatch, setRole, setPro, setEmail, setLanguage, toast }),
-    [state, setRole, setPro, setEmail, setLanguage, toast]
+    () => ({ state, dispatch, setRole, setPro, setProfile, setEmail, setLanguage, toast }),
+    [state, setRole, setPro, setProfile, setEmail, setLanguage, toast]
   );
 
   return <AppStoreContext.Provider value={api}>{children}</AppStoreContext.Provider>;

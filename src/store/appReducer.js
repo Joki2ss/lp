@@ -14,6 +14,17 @@ export function appReducer(state, action) {
     case ACTIONS.SET_PRO: {
       return { ...state, session: { ...state.session, isPro: action.payload.isPro } };
     }
+    case ACTIONS.SET_PROFILE: {
+      return {
+        ...state,
+        session: {
+          ...state.session,
+          displayName: action.payload.displayName ?? state.session.displayName,
+          email: action.payload.email ?? state.session.email,
+          mobile: action.payload.mobile ?? state.session.mobile,
+        },
+      };
+    }
     case ACTIONS.SET_EMAIL: {
       return { ...state, session: { ...state.session, email: action.payload.email } };
     }

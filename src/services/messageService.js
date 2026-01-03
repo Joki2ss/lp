@@ -1,6 +1,7 @@
 import { createId } from '../utils/id';
 import { nowIso } from '../utils/date';
 import { getItem, setItem } from './storage';
+import { addMessageNotification } from './notificationService';
 
 const CHATS_KEY = 'chats';
 
@@ -57,7 +58,33 @@ export async function getChat(chatId) {
   return chats.find((c) => c.id === chatId) ?? null;
 }
 
-export async function sendMessage({ chatId, senderId, text }) {
+export async function createDmChat({ memberA, memberB, title }) {
+  const chats = await listChats();
+  const a = memberA;
+  const b = memberB;
+  const existing = chats.find(
+    (c) =>
+      c.type === 'dm' &&
+      Array.isArray(c.members) &&
+      c.members.length === 2 &&
+      c.members.includes(a) &&
+      c.members.includes(b)
+  );
+  if (existing) return existing;
+
+  const id = createId('chat');
+  const next = {
+    id,
+    type: 'dm',
+    title: title?.trim() || 'Direct message',
+    members: [a, b],
+    messages: [],
+  };
+  await setItem(CHATS_KEY, [next, ...chats]);
+  return next;
+}
+
+export async function sendMessage({ chatId, senderId, text, fromName }) {
   const chats = await listChats();
   const chat = chats.find((c) => c.id === chatId);
   if (!chat) throw new Error('Chat not found');
@@ -66,6 +93,22 @@ export async function sendMessage({ chatId, senderId, text }) {
   const message = { id: messageId, chatId, senderId, text, createdAt: nowIso(), readBy };
   const nextChats = chats.map((c) => (c.id === chatId ? { ...c, messages: [...c.messages, message] } : c));
   await setItem(CHATS_KEY, nextChats);
+
+  // Notification for all other members
+  const others = chat.members.filter((m) => m !== senderId);
+  await Promise.all(
+    others.map((toUserId) =>
+      addMessageNotification({
+        toUserId,
+        fromUserId: senderId,
+        fromName: fromName || senderId,
+        chatId,
+        messageId,
+        previewText: text,
+      }).catch(() => null)
+    )
+  );
+
   return message;
 }
 

@@ -3,10 +3,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import { theme } from '../styles/theme';
 import { formatTime } from '../utils/date';
 
-export function MessageBubble({ message, isMine, showReadReceipt }) {
+export function MessageBubble({ message, isMine, showReadReceipt, highlighted = false }) {
   return (
     <View style={[styles.row, isMine ? styles.mineRow : styles.otherRow]}>
-      <View style={[styles.bubble, isMine ? styles.mine : styles.other]}>
+      <View style={[styles.bubble, isMine ? styles.mine : styles.other, highlighted ? styles.highlighted : null]}>
         <Text style={styles.text}>{message.text}</Text>
         <View style={styles.meta}>
           <Text style={styles.time}>{formatTime(message.createdAt)}</Text>
@@ -33,6 +33,14 @@ const styles = StyleSheet.create({
   },
   mine: { backgroundColor: theme.colors.card2, borderColor: theme.colors.brand },
   other: { backgroundColor: theme.colors.card },
+  highlighted: {
+    borderColor: theme.colors.warning,
+    shadowColor: theme.colors.warning,
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 3,
+  },
   text: { color: theme.colors.text, fontSize: 14 },
   meta: { flexDirection: 'row', gap: 10, marginTop: 6, justifyContent: 'flex-end' },
   time: { color: theme.colors.muted, fontSize: 11 },
