@@ -10,31 +10,31 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "react-native": "latest",
-    "react-native-web": "latest",
+    "expo": "~53.0.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-native": "0.76.6",
+    "react-native-web": "~0.19.13",
 
-    "expo-asset": "latest",
-    "expo-file-system": "latest",
-    "expo-print": "latest",
-    "expo-secure-store": "latest",
-    "expo-status-bar": "latest",
+    "expo-asset": "~12.0.12",
+    "expo-file-system": "~19.0.21",
+    "expo-print": "~15.0.8",
+    "expo-secure-store": "~15.0.8",
+    "expo-status-bar": "~3.0.9",
 
-    "@react-native-async-storage/async-storage": "latest",
+    "@react-native-async-storage/async-storage": "2.2.0",
 
-    "@react-navigation/native": "latest",
-    "@react-navigation/bottom-tabs": "latest",
-    "@react-navigation/native-stack": "latest",
-    "react-native-safe-area-context": "latest",
-    "react-native-screens": "latest",
+    "@react-navigation/native": "^6.1.18",
+    "@react-navigation/bottom-tabs": "^6.6.1",
+    "@react-navigation/native-stack": "^6.11.0",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0",
 
-    "i18next": "latest",
-    "react-i18next": "latest",
+    "i18next": "^23.15.1",
+    "react-i18next": "^15.0.2",
 
-    "react-native-svg": "latest",
-    "react-native-webview": "latest",
+    "react-native-svg": "15.12.1",
+    "react-native-webview": "13.15.0",
     "typescript": "^5.6.3"
   }
 }

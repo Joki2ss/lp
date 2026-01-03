@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system';
 
 import { theme } from '../styles/theme';
 
@@ -10,11 +9,30 @@ async function loadSvgXml(moduleRef) {
   const asset = Asset.fromModule(moduleRef);
   await asset.downloadAsync();
   const uri = asset.uri;
-  if (uri.startsWith('file://')) {
-    return await FileSystem.readAsStringAsync(uri);
+
+  // Prefer fetch (works on web and many runtimes). For file:// on native,
+  // fall back to expo-file-system if available.
+  try {
+    const res = await fetch(uri);
+    return await res.text();
+  } catch {
+    if (uri.startsWith('file://')) {
+      const FileSystem = await getOptionalFileSystem();
+      if (FileSystem?.readAsStringAsync) {
+        return await FileSystem.readAsStringAsync(uri);
+      }
+    }
+    throw new Error('Unable to load flag asset');
   }
-  const res = await fetch(uri);
-  return await res.text();
+}
+
+async function getOptionalFileSystem() {
+  try {
+    const mod = await import('expo-file-system');
+    return mod;
+  } catch {
+    return null;
+  }
 }
 
 export function FlagIcon({ source, size = 22 }) {

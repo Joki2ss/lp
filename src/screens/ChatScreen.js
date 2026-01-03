@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
@@ -15,22 +15,22 @@ export function ChatScreen() {
   const chatId = route?.params?.chatId;
   const [chat, setChat] = useState(null);
 
-  const refresh = async () => {
+  const refresh = useCallback(async () => {
     if (!chatId) return;
     const c = await getChat(chatId);
     setChat(c);
-  };
+  }, [chatId]);
 
   useEffect(() => {
     refresh();
-  }, [chatId]);
+  }, [refresh]);
 
   useEffect(() => {
     if (!chatId) return;
     markChatRead({ chatId, userId: state.session.userId }).then(refresh).catch(() => {});
-  }, [chatId, state.session.userId]);
+  }, [chatId, state.session.userId, refresh]);
 
-  const messages = chat?.messages ?? [];
+  const messages = useMemo(() => chat?.messages ?? [], [chat?.messages]);
 
   const lastMine = useMemo(() => {
     for (let i = messages.length - 1; i >= 0; i--) {
