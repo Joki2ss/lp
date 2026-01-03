@@ -13,10 +13,12 @@ import {
 import { ScreenContainer } from '../components/ScreenContainer';
 import { theme } from '../styles/theme';
 import { useAppStore } from '../store/useAppStore';
-import { APP_NAME, ROLES } from '../utils/constants';
+import { ROLES } from '../utils/constants';
 import { useT } from '../i18n/t';
 
-const BG = require('../../assets/inMedia/bg.png');
+import { BG_IMAGE_URI } from '../assets/bgImage';
+
+const BG = { uri: BG_IMAGE_URI };
 
 function RoleButton({ title, subtitle, badge, badgeStyle, onPress }) {
   return (
