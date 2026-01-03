@@ -1,5 +1,14 @@
 import React, { useMemo, useState } from 'react';
-import { ImageBackground, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  ImageBackground,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 
 import { ScreenContainer } from '../components/ScreenContainer';
 import { theme } from '../styles/theme';
@@ -9,19 +18,26 @@ import { useT } from '../i18n/t';
 
 const BG = require('../../assets/inMedia/bg.png');
 
-function RoleCard({ title, subtitle, onPress, variant = 'default' }) {
+function RoleButton({ title, subtitle, badge, badgeStyle, onPress }) {
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [
-        styles.roleCard,
-        variant === 'primary' ? styles.roleCardPrimary : styles.roleCardDefault,
-        pressed ? { transform: [{ scale: 0.99 }], opacity: 0.98 } : null,
+        styles.roleBtn,
+        pressed ? { transform: [{ translateX: 3 }, { scale: 0.99 }], opacity: 0.98 } : null,
       ]}
     >
-      <View style={styles.roleCardTopGlow} />
-      <Text style={styles.roleCardTitle}>{title}</Text>
-      <Text style={styles.roleCardSubtitle}>{subtitle}</Text>
+      <View style={styles.roleBtnContent}>
+        <View style={[styles.roleBadge, badgeStyle]}>
+          <View style={styles.roleBadgeTopGlow} />
+          <Text style={styles.roleBadgeText}>{badge}</Text>
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.roleBtnTitle}>{title}</Text>
+          <Text style={styles.roleBtnSubtitle}>{subtitle}</Text>
+        </View>
+      </View>
+      <Text style={styles.roleArrow}>→</Text>
     </Pressable>
   );
 }
@@ -104,6 +120,8 @@ export function HomeScreen() {
   const { t } = useT();
   const { state, setRole, setProfile } = useAppStore();
   const [signupRole, setSignupRole] = useState(null);
+  const { width } = useWindowDimensions();
+  const isWide = width >= 920;
 
   const onPickRole = (role) => {
     setSignupRole(role);
@@ -121,89 +139,155 @@ export function HomeScreen() {
   };
 
   return (
-    <ImageBackground source={BG} resizeMode="cover" style={styles.bg}>
-      <View style={styles.bgOverlay} />
-      <ScreenContainer>
-        <View style={styles.hero}>
-          <Text style={styles.title}>{APP_NAME}</Text>
-          <Text style={styles.subtitle}>Choose profile type to preview role-based views</Text>
+    <View style={styles.root}>
+      <View style={[styles.split, !isWide ? styles.splitStack : null]}>
+        <View style={[styles.leftPanel, !isWide ? styles.leftPanelStack : null]}>
+          <ImageBackground source={BG} resizeMode="cover" style={styles.leftBg}>
+            <View style={styles.leftGradient} />
+            <View style={styles.leftGlow1} />
+            <View style={styles.leftGlow2} />
+            <View style={styles.branding}>
+              <Text style={styles.brandLogo}>SXR</Text>
+              <Text style={styles.brandSubtitle}>MANAGEMENT SUITE</Text>
+            </View>
+          </ImageBackground>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.h2}>{t('role')}</Text>
-          <Text style={styles.muted}>Current: {state.session.role}</Text>
-          <View style={styles.grid}>
-            <RoleCard
-              title={t('admin')}
-              subtitle="Full suite (includes Editor)"
-              variant="primary"
-              onPress={() => onPickRole(ROLES.ADMIN)}
-            />
-            <RoleCard
-              title={t('staff')}
-              subtitle="Work inbox + operations"
-              onPress={() => onPickRole(ROLES.STAFF)}
-            />
-            <RoleCard
-              title={t('customer')}
-              subtitle="Free: dashboard, messages, notifications"
-              onPress={() => onPickRole(ROLES.CUSTOMER)}
-            />
+        <View style={[styles.rightPanel, !isWide ? styles.rightPanelStack : null]}>
+          <View style={styles.formWrap}>
+            <View style={styles.welcome}>
+              <Text style={styles.welcomeTitle}>Sign in to continue</Text>
+              <Text style={styles.welcomeSubtitle}>Select your access level to proceed</Text>
+            </View>
+
+            <Text style={styles.roleLabel}>Access level</Text>
+            <View style={{ gap: 12 }}>
+              <RoleButton
+                title={t('admin')}
+                subtitle="Administrator"
+                badge="A"
+                badgeStyle={styles.badgeAdmin}
+                onPress={() => onPickRole(ROLES.ADMIN)}
+              />
+              <RoleButton
+                title={t('staff')}
+                subtitle="Staff member"
+                badge="S"
+                badgeStyle={styles.badgeStaff}
+                onPress={() => onPickRole(ROLES.STAFF)}
+              />
+              <RoleButton
+                title={t('customer')}
+                subtitle="Customer portal (free)"
+                badge="C"
+                badgeStyle={styles.badgeCustomer}
+                onPress={() => onPickRole(ROLES.CUSTOMER)}
+              />
+            </View>
+
+            <Text style={styles.footerText}>Current: {state.session.role}</Text>
           </View>
         </View>
+      </View>
 
-        <SignupModal
-          visible={!!signupRole}
-          role={signupRole}
-          onClose={() => setSignupRole(null)}
-          onSubmit={onSubmit}
-        />
-      </ScreenContainer>
-    </ImageBackground>
+      <SignupModal
+        visible={!!signupRole}
+        role={signupRole}
+        onClose={() => setSignupRole(null)}
+        onSubmit={onSubmit}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  bg: { flex: 1 },
-  bgOverlay: {
+  root: { flex: 1, backgroundColor: theme.colors.bg },
+  split: { flex: 1, flexDirection: 'row' },
+  splitStack: { flexDirection: 'column' },
+
+  leftPanel: { flex: 1, minHeight: '100%' },
+  leftPanelStack: { minHeight: 240 },
+  leftBg: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  leftGradient: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: theme.colors.bg,
-    opacity: 0.82,
+    backgroundColor: '#0F172A',
+    opacity: 0.86,
   },
-  hero: { gap: 8, marginBottom: theme.spacing.xl },
-  title: { ...theme.typography.title, color: theme.colors.text },
-  subtitle: { color: theme.colors.muted },
-  section: { gap: theme.spacing.sm },
-  h2: { ...theme.typography.h2, color: theme.colors.text },
-  muted: { color: theme.colors.muted },
-  grid: { gap: theme.spacing.sm },
-  roleCard: {
-    borderRadius: theme.radius.lg,
+  leftGlow1: {
+    position: 'absolute',
+    width: 520,
+    height: 520,
+    borderRadius: 520,
+    backgroundColor: 'rgba(59,130,246,0.18)',
+    top: -180,
+    right: -180,
+  },
+  leftGlow2: {
+    position: 'absolute',
+    width: 360,
+    height: 360,
+    borderRadius: 360,
+    backgroundColor: 'rgba(99,102,241,0.12)',
+    bottom: -120,
+    left: -120,
+  },
+  branding: { alignItems: 'center', paddingHorizontal: 24 },
+  brandLogo: { fontSize: 54, fontWeight: '900', color: '#fff', letterSpacing: -2 },
+  brandSubtitle: { marginTop: 10, fontSize: 14, color: 'rgba(255,255,255,0.70)', letterSpacing: 3, fontWeight: '400' },
+
+  rightPanel: { flex: 1, backgroundColor: theme.colors.card, justifyContent: 'center', padding: 24 },
+  rightPanelStack: { paddingVertical: 28 },
+  formWrap: { width: '100%', maxWidth: 440, alignSelf: 'center' },
+  welcome: { marginBottom: 18 },
+  welcomeTitle: { fontSize: 28, fontWeight: '900', color: theme.colors.text, letterSpacing: -0.6 },
+  welcomeSubtitle: { marginTop: 8, fontSize: 14, color: theme.colors.muted },
+  roleLabel: {
+    marginTop: 10,
+    marginBottom: 8,
+    fontSize: 12,
+    fontWeight: '900',
+    color: theme.colors.muted,
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
+  },
+
+  roleBtn: {
+    borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.border,
-    padding: theme.spacing.lg,
-    backgroundColor: theme.colors.card,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOpacity: 0.12,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 4,
+    backgroundColor: '#fff',
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  roleCardTopGlow: {
+  roleBtnContent: { flexDirection: 'row', alignItems: 'center', gap: 12, flex: 1 },
+  roleBadge: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  roleBadgeTopGlow: {
     position: 'absolute',
     left: 0,
     right: 0,
     top: 0,
-    height: 18,
-    backgroundColor: 'rgba(255,255,255,0.14)',
+    height: 14,
+    backgroundColor: 'rgba(255,255,255,0.22)',
   },
-  roleCardPrimary: {
-    borderColor: theme.colors.brand,
-  },
-  roleCardDefault: {},
-  roleCardTitle: { color: theme.colors.text, fontWeight: '900', fontSize: 16 },
-  roleCardSubtitle: { color: theme.colors.muted, marginTop: 6 },
+  roleBadgeText: { color: '#fff', fontSize: 16, fontWeight: '900' },
+  badgeAdmin: { backgroundColor: '#2563EB' },
+  badgeStaff: { backgroundColor: '#7C3AED' },
+  badgeCustomer: { backgroundColor: '#0891B2' },
+  roleBtnTitle: { color: theme.colors.text, fontSize: 15, fontWeight: '900' },
+  roleBtnSubtitle: { marginTop: 4, color: theme.colors.muted, fontSize: 13 },
+  roleArrow: { color: '#94A3B8', fontSize: 20, marginLeft: 12 },
+  footerText: { marginTop: 18, textAlign: 'center', fontSize: 12, color: theme.colors.muted },
+
   modalBackdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.55)',
